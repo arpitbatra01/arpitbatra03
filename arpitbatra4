@@ -1,0 +1,99 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.*;
+
+public class TextEditor extends JFrame {
+private JTextArea textArea;
+private JFileChooser fileChooser;
+
+public TextEditor() {
+setTitle(title:"Text Editor");
+setSize(width:800, height:600);
+setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+textArea = new JTextArea();
+JScrollPane scrollPane = new JScrollPane(textArea);
+add(scrollPane, BorderLayout.CENTER);
+
+JMenuBar menuBar = new JMenuBar();
+setJMenuBar(menuBar);
+
+JMenu fileMenu = new JMenu(s:"File");
+menuBar.add(fileMenu);
+
+JMenuItem openMenuItem = new JMenuItem(text:"Open);
+fileMenu.add(openMenuItem);
+
+JMenuItem saveMenuItem = new JMenuItem(text:"Save");
+fileMenu.add(saveMenuItem);
+
+JMenuItem exitMenuItem = new JMenuItem(text:"Exit");
+fileMenu.add(exitMenuItem);
+
+fileChooser = new JFileChooser();
+
+openMenuItem.addActionListener(new ActionListener() {
+public void actionPerformed(ActionEvent e) {
+int returnVal = filechooser.showOpenDialog(TextEditor.this);
+if (returnVal == JFileChooser.APPROVE_OPTION) {
+File file = fileChooser.getSelectedFile();
+loadFile(file);
+}
+}
+});
+
+saveMenuItem.addActionListener(new ActionListener() {
+public void actionPerformed(ActionEvent e) {
+
+int returnVal = fileChooser.showSaveDialog(TextEditor.this);
+if (returnVal == JFileChooser.APPROVE_OPTION) {
+File file = fileChooser.getSelectedFile();
+saveFile(file);
+}
+}
+});
+
+exitMenuItem.addActionListener(new ActionListener() {
+public void actionPerformed(ActionEvent e) {
+System.exit(0);
+}
+});
+}
+
+private void loadFile(File file) {
+try {
+FileReader reader = new FileReader(file);
+BufferedReader br = new BufferedReader(reader);
+String line;
+textArea.setText("");
+while ((line = br.readLine()) != null) {
+textArea.append(line + "\n");
+}
+br.close();
+} catch (IOException e) {
+e.printStackTrace();
+}
+}
+
+private void saveFile(File file) {
+try {
+FileWriter writer = new FileWriter(file);
+writer.write(textArea.getText());
+writer.close();
+} catch (IOException e) {
+e.printStackTrace();
+}
+}
+
+public static void main(String[] args) {
+SwingUtilities.invokeLater(new Runnable() {
+public void run() {
+TextEditor editor = new TextEditor();
+editor.setVisible(true);
+}
+});
+}
+}
+// program created by arpitbatra01 (PR2)
